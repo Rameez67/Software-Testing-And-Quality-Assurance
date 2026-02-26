@@ -1,0 +1,80 @@
+import unittest
+import time
+
+# Calculator functions
+def add(x, y):
+    return x + y
+
+def sub(x, y):
+    return x - y
+
+def multiply(x, y):
+    return x * y
+
+def divide(x, y):
+    if y == 0:
+        raise ZeroDivisionError("Cannot divide by zero")
+    return x / y
+
+# Report function with timing
+def report(test_name, expected, actual, duration, status):
+    print(f"{test_name}")
+    print(f"Expected : {expected}")
+    print(f"Actual   : {actual}")
+    print(f"Status   : {status}")
+    print(f"Time     : {duration:.6f} seconds")
+    print("-" * 40)
+
+
+class TestCalculator(unittest.TestCase):
+
+    def test_add(self):
+        start = time.time()
+        expected = 5
+        actual = add(2, 3)
+        end = time.time()
+
+        status = "PASS" if expected == actual else "FAIL"
+        report("Addition Test", expected, actual, end-start, status)
+        self.assertEqual(actual, expected)  # traditional equality
+
+    def test_sub(self):
+        start = time.time()
+        actual = sub(5, 3)
+        end = time.time()
+
+        expected = 2
+        status = "PASS" if expected == actual else "FAIL"
+        report("Subtraction Test", expected, actual, end-start, status)
+        self.assertNotEqual(actual, 0)  # example of not equal
+        self.assertTrue(actual > 0)      # example of assertTrue
+
+    def test_multiply(self):
+        start = time.time()
+        actual = multiply(4, 3)
+        end = time.time()
+
+        expected = 12
+        status = "PASS" if expected == actual else "FAIL"
+        report("Multiplication Test", expected, actual, end-start, status)
+        self.assertGreater(actual, 10)   # check actual is greater than 10
+
+    def test_divide(self):
+        start = time.time()
+        status = ""
+        try:
+            actual = divide(10, 0)  # this will raise ZeroDivisionError
+        except ZeroDivisionError as e:
+            actual = str(e)
+            status = "PASS"
+        end = time.time()
+
+        expected = "Cannot divide by zero"
+        report("Division by Zero Test", expected, actual, end-start, status)
+        # Check if exception is raised
+        with self.assertRaises(ZeroDivisionError):
+            divide(10, 0)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
